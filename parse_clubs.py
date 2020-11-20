@@ -2,7 +2,6 @@ import bs4
 import openpyxl
 import pandas as pd
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from time import sleep, time
 import re
 import requests
@@ -13,13 +12,15 @@ def retrieve_clubs(url, chrome, user_agent):
     driver.get(url)
     sleep(3)
     resp = requests.get(url, headers={"user-agent": user_agent})
-    soup = bs4.BeautifulSoup(resp.content, 'html.parser')
-    clubs_found = []
     soup = bs4.BeautifulSoup(driver.page_source, 'lxml')
-
-    load_clubs = driver.find_elements_by_class_name('outlinedButton')[2]
-    club_search = []
+    clubs_found = []
     num_clubs = 0
+    try:
+        load_clubs = driver.find_elements_by_class_name('outlinedButton')[2]
+        
+    except:
+        load_clubs = driver.find_elements_by_class_name('outlinedButton')[1]
+        
     while True:
             try:
                 load_clubs.click()
@@ -30,6 +31,7 @@ def retrieve_clubs(url, chrome, user_agent):
                 break
 
     sleep(2)
+    
     for i in range(0, num_clubs - 2):
         try:
             club = driver.execute_script('''
@@ -58,7 +60,7 @@ def retrieve_clubs(url, chrome, user_agent):
             sleep(.2)
             driver.back()
             sleep(.2)
-            print(club_profile)
+            print(f'Club Profile: {club_profile}')
 
         except:
             print('Club could not be reached')
@@ -71,7 +73,6 @@ def retrieve_clubs(url, chrome, user_agent):
         else:
             cleaned_clubs.append(club)
 
-    print(cleaned_clubs)
     club_df = pd.DataFrame(cleaned_clubs)
     club_df.to_excel("Clubs & Contact.xlsx")
     return cleaned_clubs
