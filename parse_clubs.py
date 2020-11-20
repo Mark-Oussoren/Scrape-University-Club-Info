@@ -3,11 +3,9 @@ import openpyxl
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from time import sleep, time
 import re
 import requests
-from pathlib import Path
 import argparse
 
 def retrieve_clubs(url, chrome, user_agent):
@@ -79,6 +77,7 @@ def retrieve_clubs(url, chrome, user_agent):
     return cleaned_clubs
 
 if __name__ == '__main__':
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("--club_site", help="URL of Club - Filter at least one", nargs='?', action='store',
                         default='https://beinvolved.indiana.edu/organizations?categories=6872', type=str)
