@@ -1,5 +1,5 @@
 # Scrape-University-Club-Info
-Grabs club names and emails for organizations using Campus Labs. Key is that you have to click on the filters on the Campus Lab page and select at least one filter otherwise you'll get an error about selecting the wrong button trying to log in. 
+Grabs club names and emails for organizations using Campus Labs ~ 1600+ colleges. I recommend on club sites filtering by at least one organization because there can be 900+ organizations, but only 200 or so are relevant to you. If you want to go through multiple clubs, it's very easy to have selenium run in the background and add a loop to run through multiple college club page urls.
 
 1. `cd /.../Scrape-University-Club-Info/requirements.txt`
 2. `pip3 install -r requirements.txt`
