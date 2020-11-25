@@ -67,7 +67,7 @@ def retrieve_clubs(url, chrome, user_agent):
 
     cleaned_clubs = []
     for club in clubs_found:
-        if club['Contact Info'] == []:
+        if club['Contact Info'] == [] or club['Club Name'] == 'NA':
             pass
 
         else:
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     parser.add_argument("--agent", help="User Agent", nargs='?', action='store', type=str)
 
     args = parser.parse_args()
-    url = args.club_size
+    url = args.club_site
     chrome = args.chrome
     user_agent = args.agent
     start_time = time()
