@@ -7,6 +7,7 @@ import re
 import requests
 import argparse
 
+
 def retrieve_clubs(url, chrome, user_agent):
     driver = webdriver.Chrome(executable_path=chrome)
     driver.get(url)
@@ -16,11 +17,9 @@ def retrieve_clubs(url, chrome, user_agent):
     clubs_found = []
     num_clubs = 0
     try:
-        load_clubs = driver.find_elements_by_class_name('outlinedButton')[2]
-        
+        load_clubs = driver.find_elements_by_class_name('outlinedButton')[2]   
     except:
         load_clubs = driver.find_elements_by_class_name('outlinedButton')[1]
-        
     while True:
             try:
                 load_clubs.click()
@@ -29,9 +28,7 @@ def retrieve_clubs(url, chrome, user_agent):
 
             except:
                 break
-
     sleep(2)
-    
     for i in range(0, num_clubs - 2):
         try:
             club = driver.execute_script('''
@@ -39,29 +36,23 @@ def retrieve_clubs(url, chrome, user_agent):
             sleep(.2)
             club.click()
             sleep(.5)
-
             try:
                 club_name = driver.execute_script('''
                                         return document.querySelector('div[role="main"]').getElementsByTagName('h1')[0].innerText''')
-
             except:
                 club_name = 'NA'
-
             try:
                 e = driver.find_element_by_tag_name('strong')
                 club_info = e.find_element_by_xpath('.//ancestor::*').text
                 contact_info = re.search(r'[\w\.-]+@[\w\.-]+', club_info).group(0)
-
             except:
                 contact_info = []
-
             club_profile = {'Club Name': club_name, 'Contact Info': contact_info}
             clubs_found.append(club_profile)
             sleep(.2)
             driver.back()
             sleep(.2)
             print(f'Club Profile: {club_profile}')
-
         except:
             print('Club could not be reached')
 
@@ -69,7 +60,6 @@ def retrieve_clubs(url, chrome, user_agent):
     for club in clubs_found:
         if club['Contact Info'] == [] or club['Club Name'] == 'NA':
             pass
-
         else:
             cleaned_clubs.append(club)
 
@@ -77,14 +67,13 @@ def retrieve_clubs(url, chrome, user_agent):
     club_df.to_excel("Clubs & Contact.xlsx")
     return cleaned_clubs
 
-if __name__ == '__main__':
-    
+
+if __name__ == '__main__':   
     parser = argparse.ArgumentParser()
     parser.add_argument("--club_site", help="URL of Club - Filter at least one", nargs='?', action='store',
                         default='https://beinvolved.indiana.edu/organizations?categories=6872', type=str)
     parser.add_argument("--chrome", help="Path to Chromedriver 86", nargs='?', action='store', type=str)
     parser.add_argument("--agent", help="User Agent", nargs='?', action='store', type=str)
-
     args = parser.parse_args()
     url = args.club_site
     chrome = args.chrome
